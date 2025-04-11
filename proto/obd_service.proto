@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package obd;
+
+// Go-specific package path
+option go_package = "github.com/halldorstefans/obdservice";
+
+// OBD Service definition
+service OBDService {
+  // Gets the current fuel level
+  rpc GetFuelLevel(FuelLevelRequest) returns (FuelLevelResponse) {}
+  
+  // Stream fuel level updates periodically
+  rpc StreamFuelLevel(FuelLevelStreamRequest) returns (stream FuelLevelResponse) {}
+}
+
+// The request message for getting fuel level
+message FuelLevelRequest {
+  // Any additional parameters can be added here
+  // For example, vehicle identification, etc.
+  string vehicle_id = 1;
+}
+
+// Request for streaming fuel level updates
+message FuelLevelStreamRequest {
+  string vehicle_id = 1;
+  // Interval in seconds between updates
+  uint32 interval_seconds = 2;
+}
+
+// The response message containing the fuel level
+message FuelLevelResponse {
+  // Fuel level in percent (0.0 - 100.0)
+  float level_percent = 1;
+  
+  // Timestamp of the reading (in milliseconds since epoch)
+  uint64 timestamp_ms = 2;
+  
+  // Status code (0 = OK, non-zero = error)
+  int32 status = 3;
+  
+  // Optional error message if status is non-zero
+  string error_message = 4;
+}
+
