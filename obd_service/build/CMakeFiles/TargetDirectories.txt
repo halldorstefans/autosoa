@@ -1,4 +1,0 @@
-/home/halldor/dev/auto_soa_tstack/obd_service/build/CMakeFiles/obd_server.dir
-/home/halldor/dev/auto_soa_tstack/obd_service/build/CMakeFiles/obd_client.dir
-/home/halldor/dev/auto_soa_tstack/obd_service/build/CMakeFiles/edit_cache.dir
-/home/halldor/dev/auto_soa_tstack/obd_service/build/CMakeFiles/rebuild_cache.dir

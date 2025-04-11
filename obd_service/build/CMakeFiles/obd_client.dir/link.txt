@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/obd_client.dir/src/obd_client.cpp.o CMakeFiles/obd_client.dir/obd_service.pb.cc.o CMakeFiles/obd_client.dir/obd_service.grpc.pb.cc.o -o obd_client  -lprotobuf -lgrpc++ -lgrpc -lgpr -lpthread 

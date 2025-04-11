@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/obd_server.dir/src/obd_server_main.cpp.o CMakeFiles/obd_server.dir/src/obd_service_impl.cpp.o CMakeFiles/obd_server.dir/src/fuel_level_sensor.cpp.o CMakeFiles/obd_server.dir/obd_service.pb.cc.o CMakeFiles/obd_server.dir/obd_service.grpc.pb.cc.o -o obd_server  -lprotobuf -lgrpc++ -lgrpc -lgpr -lpthread 
