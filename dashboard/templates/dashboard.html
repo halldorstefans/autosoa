@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SDV Cloud Dashboard</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 3H8a2 2 0 0 0-2 2v16l6-3 6 3V5a2 2 0 0 0-2-2z"></path>
+                </svg>
+                SDV Cloud Dashboard
+            </h1>
+        </header>
+        
+        <div class="dashboard-grid">
+            <div class="main-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 3v18h18"></path>
+                                <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"></path>
+                            </svg>
+                            Vehicle Data
+                        </h2>
+                        <div id="connection-status">
+                            <div class="status-indicator">
+                                <div class="status-dot online"></div>
+                                <span>Connected</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="data-panel">
+                        <div class="data-item" id="fuel-level-item">
+                            <div class="data-item-header">
+                                <span>Fuel Level</span>
+                                <button class="refresh-btn" onclick="dashboard.requestData('fuel_level')">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M23 4v6h-6"></path>
+                                        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="data-value" id="fuel-value">--</div>
+                            <div class="fuel-gauge">
+                                <div class="fuel-level" id="fuel-level-bar"></div>
+                            </div>
+                            <div class="fuel-labels">
+                                <span>E</span>
+                                <span>F</span>
+                            </div>
+                            <div class="data-timestamp" id="fuel-timestamp">No data</div>
+                        </div>
+                        
+                        <div class="data-item" id="headlight-state-item">
+                            <div class="data-item-header">
+                                <span>Headlight State</span>
+                            </div>
+                            <div class="data-value" id="headlight-state">--</div>
+                            <div class="data-timestamp" id="headlight-timestamp">No data</div>
+                        </div>
+                        <!-- Add more data items here as needed -->
+                    </div>
+                    
+                    <div class="stream-controls">
+                        <button class="btn btn-primary" id="stream-toggle" onclick="dashboard.toggleStreaming()">
+                            Start Streaming
+                        </button>
+                        <div class="streaming-status">
+                            <span id="streaming-label">Streaming stopped</span>
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 20h9"></path>
+                                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                            </svg>
+                            Event Log
+                        </h2>
+                    </div>
+                    <div class="event-log" id="event-log">
+                        <div class="log-entry">
+                            <span class="log-time">[00:00:00]</span> System initialized
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar">
+                <div class="card control-panel">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                            </svg>
+                            Controls
+                        </h2>
+                    </div>
+                    
+                    <form id="request-form">
+                        <div class="form-group">
+                            <label for="data-key">Data Point</label>
+                            <select id="data-key" class="form-control">
+                                <option value="fuel_level">Fuel Level</option>
+                                <!-- Add more options here as you expand -->
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="vehicle-id">Vehicle ID</label>
+                            <input type="text" id="vehicle-id" class="form-control" value="VIN123456789">
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Request Data</button>
+                    </form>
+                    
+                    <form id="headlight-form">
+                        <div class="form-group">
+                            <label for="data-value">State</label>
+                            <select id="data-value" class="form-control">
+                                <option value="true">On</option>
+                                <option value="false">Off</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Set Headlights</button>
+                    </form>
+
+                    <div class="form-group" style="margin-top: 20px;">
+                        <label for="stream-interval">Stream Interval (seconds)</label>
+                        <input type="number" id="stream-interval" class="form-control" value="2" min="1" max="60">
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="16" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                            </svg>
+                            System Info
+                        </h2>
+                    </div>
+                    <div>
+                        <p><strong>V2C Gateway:</strong> <span id="gateway-status">Connected</span></p>
+                        <p><strong>OBD Service:</strong> <span id="obd-status">Connected</span></p>
+                        <p><strong>Last Update:</strong> <span id="last-update">Never</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/dashboard.js"></script>
+</body>
+</html>

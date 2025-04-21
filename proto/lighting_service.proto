@@ -1,0 +1,31 @@
+// lighting_service.proto
+syntax = "proto3";
+
+package lighting;
+
+// Go-specific package path
+option go_package = "github.com/halldorstefans/obdservice";
+
+service LightingService {
+  // Get the current state of the headlight
+  rpc GetHeadlightState(GetHeadlightStateRequest) returns (GetHeadlightStateResponse) {}
+  
+  // Set the state of the headlight
+  rpc SetHeadlight(SetHeadlightRequest) returns (SetHeadlightResponse) {}
+}
+
+message GetHeadlightStateRequest {
+  // Empty request - no parameters needed
+}
+
+message GetHeadlightStateResponse {
+  bool is_on = 1;
+}
+
+message SetHeadlightRequest {
+  bool turn_on = 1;
+}
+
+message SetHeadlightResponse {
+  bool success = 1;
+}

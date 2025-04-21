@@ -45,7 +45,7 @@ go get google.golang.org/grpc
 Build the obd gRPC server using CMake:
 
 ```bash
-cd obd_service
+cd zonal_controller
 rm -rf build
 mkdir build
 cd build
@@ -56,10 +56,10 @@ make
 Generate Go code from proto file and buil the go client
 
 ```bash
-go build -o obd_client
-protoc --proto_path=../proto --go_out=. --go_opt=paths=source_relative \
-    --go-grpc_out=. --go-grpc_opt=paths=source_relative obd_service.proto
-go build -o obd_client
+cd ob_services
+protoc --proto_path=../proto --go_out=./proto --go_opt=paths=source_relative \
+    --go-grpc_out=./proto --go-grpc_opt=paths=source_relative obd_service.proto lighting_service.proto
+go build -o ob_service
 ```
 
 ## Run
@@ -67,15 +67,15 @@ go build -o obd_client
 1. Make sure your C++ gRPC server is running:
     
     ```bash
-    cd obd_service/build
+    cd zonal_controller/build
     ./obd_server
     ```
     
 2. In another terminal, run the Go client:
     
     ```bash
-    cd obd_go_client
-    ./obd_client
+    cd ob_services
+    ./ob_service
     ```
     
 The Go client should connect to the C++ server and perform the same operations:
