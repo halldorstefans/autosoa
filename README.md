@@ -1,11 +1,45 @@
-# Learning Automotive Software & Architecture
+# Learning Service-Oriented Architecture (SOA) in Automotive
 
-Exploring Service-Oriented Architecture (SOA) architecture for vehicles.
+A project to learn and understand modern Service-Oriented Architecture (SOA) implementation for vehicle systems, featuring multiple interconnected services for vehicle data management and control.
 
-## Dependencies (Linux)
+## System Overview
 
-For C++ services
+This project implements a modern automotive software architecture with the following components:
 
+1. **Zonal Controller** (`zonal_controller/`)
+   - C++17-based gRPC service
+   - Handles OBD (On-Board Diagnostics) functionality
+   - Controls vehicle lighting systems
+   - Implements real-time fuel level monitoring
+   - Manages headlight state control
+
+2. **Signal Service** (`signalservice/`)
+   - Go-based gRPC gateway service
+   - Provides unified access to vehicle signals
+   - Supports both OBD and lighting system signals
+   - Configurable gateway with environment variables
+   - Implements middleware for request handling
+
+3. **Vehicle Dashboard** (`dashboard/`)
+   - Flask-based web interface
+   - Real-time vehicle data monitoring
+   - Vehicle feature control
+   - Server-Sent Events (SSE) for live updates
+   - RESTful API endpoints
+
+## Architecture
+
+The system follows a service-oriented architecture with clear separation of concerns:
+
+```
+├── zonal_controller/     # Low-level vehicle control
+├── signalservice/        # Signal gateway and management
+└── dashboard/            # Web interface and monitoring
+```
+
+## Dependencies
+
+### For C++ Services (Zonal Controller)
 ```bash
 sudo apt update
 sudo apt install -y build-essential cmake
@@ -13,37 +47,29 @@ sudo apt install -y libgrpc++-dev libgrpc-dev
 sudo apt install -y protobuf-compiler protobuf-compiler-grpc libprotobuf-dev
 ```
 
-For Go client
-
+### For Go Services (Signal Service)
 ```bash
 sudo apt update
 sudo apt install golang-go
 sudo apt install -y protobuf-compiler
-```
 
-### Required Go packages
-
-``` bash
+# Required Go packages
 go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
-```
-
-Add the Go bin directory to your PATH if it's not already there
-
-```bash
 export PATH="$PATH:$(go env GOPATH)/bin"
-```
-
-Install gRPC package
-
-```bash
 go get google.golang.org/grpc
 ```
 
-## Build
+### For Python Services (Dashboard)
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
 
-Build the obd gRPC server using CMake:
+## Building and Running
 
+### 1. Build the Zonal Controller
 ```bash
 cd zonal_controller
 rm -rf build
@@ -53,32 +79,74 @@ cmake ..
 make
 ```
 
-Generate Go code from proto file and buil the go client
-
+### 2. Build the Signal Service
 ```bash
-cd ob_services
-protoc --proto_path=../proto --go_out=./proto --go_opt=paths=source_relative \
-    --go-grpc_out=./proto --go-grpc_opt=paths=source_relative obd_service.proto lighting_service.proto
-go build -o ob_service
+cd signalservice
+go mod download
+go build -o signalservice cmd/signalservice/main.go
 ```
 
-## Run
+### 3. Build the Dashboard
+```bash
+cd dashboard
+pip install -r requirements.txt
+```
 
-1. Make sure your C++ gRPC server is running:
-    
-    ```bash
-    cd zonal_controller/build
-    ./obd_server
-    ```
-    
-2. In another terminal, run the Go client:
-    
-    ```bash
-    cd ob_services
-    ./ob_service
-    ```
-    
-The Go client should connect to the C++ server and perform the same operations:
+## Running the System
 
-- Get a single fuel level reading
-- Stream fuel level updates for a few seconds
+1. Start the Zonal Controller:
+```bash
+cd zonal_controller/build
+./zonal_controller
+```
+
+2. Start the Signal Service:
+```bash
+cd signalservice
+./signalservice
+```
+
+3. Start the Dashboard:
+```bash
+cd dashboard
+python3 app.py
+```
+
+## Configuration
+
+Each component can be configured through environment variables:
+
+- **Signal Service**:
+  - `OB_SERVER_ADDR`: OBD server address (default: "localhost:50051")
+  - `DEFAULT_VEHICLE`: Default vehicle identifier
+  - `GATEWAY_PORT`: Gateway service port (default: 8080)
+
+- **Dashboard**:
+  - `DEBUG`: Enable/disable debug mode
+  - `PORT`: Server port (default: 5000)
+  - `VEHICLE_GATEWAY_URL`: V2C gateway URL
+
+## Development Status
+
+The system is currently in active development with the following features implemented:
+
+- Real-time vehicle data monitoring
+- Vehicle lighting control
+- OBD functionality
+- Web-based dashboard interface
+- gRPC-based service communication
+- Protocol Buffers for message serialization
+- Configuration management
+- Logging system
+- Security features
+
+## Potential Future Improvements
+
+- Comprehensive API documentation
+- Additional vehicle data points
+- Enhanced error handling and logging
+- User authentication and authorization
+- Historical data visualization
+- CI/CD pipeline configuration
+- Comprehensive testing suite
+- Metrics and monitoring
